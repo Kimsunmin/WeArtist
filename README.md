@@ -94,7 +94,7 @@ public class SocketHandler extends TextWebSocketHandler{
 	
 	// 연결된 유저들을 저장하는 리스트
 	List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-  // socket에 접근한 유저의 아이디와 sessionID를 저장하는 리스트
+  	// socket에 접근한 유저의 아이디와 sessionID를 저장하는 리스트
 	List<Map<String, String>> userList = new ArrayList<Map<String,String>>();
 	
 	@Override
@@ -104,12 +104,12 @@ public class SocketHandler extends TextWebSocketHandler{
 		
 		data = mapper.readValue(message.getPayload(), new TypeReference<Map<String,Object>>(){}); // json타입으로 온 메세지를 파싱한다
 		
-    //event 값으로 user이 넘어온다면 해당 유저의 ID와 SessionId를 저장한다
+    		//event 값으로 user이 넘어온다면 해당 유저의 ID와 SessionId를 저장한다
 		if(data.get("event").equals("user")) {
 			Map<String, String> commandMap = new HashMap<String, String>();
 			commandMap.put((String) data.get("data"), session.getId());
 			userList.add(commandMap);
-    //event 값으로 bye가 넘어온다면 해당 session을 리스트에서 삭제후 close()해준다.
+    		//event 값으로 bye가 넘어온다면 해당 session을 리스트에서 삭제후 close()해준다.
 		}else if(data.get("event").equals("bye")) {
 			sessions.remove(session);
 			session.close();
