@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  
+<!-- 마이바티스 관련 설정 파일 -->
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	<typeAliases>
+	<!--typeAlias 들어올 곳  -->
+		<!-- <typeAlias type="com.kh.toy.member.model.vo.Member"	alias="member" /> -->
+	</typeAliases>
+	
+	
+	<mappers>
+	<!-- mapper 들어올 곳 -->
+		<!-- <mapper resource="mybatis/mapper/.../... "/> -->
+	</mappers>
+</configuration>

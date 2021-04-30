@@ -1,0 +1,58 @@
+<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- Appenders -->
+	<!-- 어디에 로그를 남길 것 인지 log4J의 Appender 객체를 통해 지정
+		
+	 -->
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
+		</layout>
+	</appender>
+	
+	<!-- 로그를 사용할 패키지를 지정 -->
+	<!-- Application Loggers -->
+	<logger name="com.kh.toy">
+		<!-- 
+			1. ALL 모든 로깅을 콘솔에 출력
+			2. TRACE : 추적
+			3. DEBUG : 디버깅
+			4. INFO : 정보
+			5. WATN : 경고
+			6.6 ERROR : 에러
+			7. FATAL : 치명적
+		 -->
+		<level value="info" />
+	</logger>
+	
+	<!-- 3rdparty Loggers -->
+	<logger name="org.springframework.core">
+		<level value="info" />
+	</logger>
+	
+	<logger name="mapper">
+		<level value="trace"/>
+	</logger>
+	
+	<logger name="org.springframework.beans">
+		<level value="info" />
+	</logger>
+	
+	<logger name="org.springframework.context">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.springframework.web">
+		<level value="info" />
+	</logger>
+
+	<!-- Root Logger -->
+	<root>
+		<priority value="warn" />
+		<appender-ref ref="console" />
+	</root>
+	
+</log4j:configuration>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.we.art.gallery.model.repository.GalleryRepository">
+	
+	<insert id="insertAllGalleryInfo">
+		<foreach collection="list" item="item" open="insert all" close="select * from dual" separator=" ">
+			into tb_gallery(USER_ID, F_IDX, BD_NO, PATH, IMG_ORDER)
+			values(
+				#{item.userId},
+				#{item.fIdx},
+				#{item.bdNo},
+				#{item.path},
+				#{item.imgOrder}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="updateAllGalleryInfo">
+		<foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close="; END ;">
+			update tb_gallery set
+			USER_ID = #{item.userId}, 
+			F_IDX = #{item.fIdx}, 
+			BD_NO = #{item.bdNo}, 
+			PATH = #{item.path} 
+			<where>
+				IMG_ORDER = #{item.imgOrder} and user_id = #{item.userId}
+			</where>
+		</foreach>
+	</update>
+	
+	<delete id="deleteAllGalleryInfo">
+		<foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close="; END ;">
+			DELETE FROM TB_GALLERY
+			<where>
+				IMG_ORDER = #{item.imgOrder} and user_id = #{item.userId} 
+			</where>
+		</foreach>
+	</delete>
+	
+	<select id="selectGalleryByRandom" resultMap="randomGallery">
+		SELECT BD.BD_TITLE, BD.BD_CONTENT, F.F_SAVE_PATH, F.F_RENAME
+		FROM (
+			SELECT B.BD_NO, B.F_IDX
+			FROM (
+				SELECT ROWNUM RNUM, BD_NO, F_IDX
+				FROM TB_BOARD_MASTER
+			) B
+			WHERE B.RNUM IN
+			<foreach collection="list" item="item" open="(" close=")" separator=","> 
+				#{item}
+			</foreach>
+		) BM, TB_BOARD BD, TB_FILE F
+		WHERE
+		BM.F_IDX = F.F_IDX AND BM.BD_NO = BD.BD_NO
+	</select>
+	
+	<resultMap type="map" id="randomGallery">
+		<result column="BD_TITLE" property="bdTitle"/>
+		<result column="BD_CONTENT" property="bdContent"/>
+		<result column="F_SAVE_PATH" property="fSavePath"/>
+		<result column="F_RENAME" property="fRename"/>
+	</resultMap>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

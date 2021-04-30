@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.we.art.search.model.repository.SearchRepository">
+	<select id="selectBoardByTag" resultMap="boardData">
+		SELECT B.BD_NO,B.USER_ID,U.NICKNAME,B.BD_TITLE,B.BD_CONTENT,B.V_NO,B.TAG, F.F_IDX,F.F_ORIGIN, F.F_RENAME,F.F_DATE, F.IS_DEL,F.F_SAVE_PATH 
+		FROM TB_FILE F JOIN TB_BOARD B
+		ON(F.USER_ID = B.USER_ID)
+		JOIN TB_BOARD_MASTER BM
+		ON(F.F_IDX = BM.F_IDX AND B.BD_NO = BM.BD_NO)
+		JOIN TB_USER U
+		ON(F.USER_ID = U.USER_ID)
+		WHERE F.F_IDX IN 
+		(
+		SELECT F_IDX FROM TB_BOARD_MASTER WHERE BD_NO IN
+		(SELECT BD_NO FROM TB_BOARD WHERE TAG LIKE '%'||#{tag}||'%')
+		)
+	</select>	
+	
+	<select id="selectAllImageFile" resultMap="boardData">
+		SELECT F.F_IDX,F.F_ORIGIN,F.F_RENAME,F.F_DATE,F.USER_ID,F.IS_DEL,F.F_SAVE_PATH,U.NICKNAME
+		FROM TB_FILE F JOIN TB_USER U
+		ON(F.USER_ID = U.USER_ID)
+		WHERE F.F_IDX  IN (SELECT F_IDX FROM TB_BOARD_MASTER)
+	</select>
+	
+	<select id="selectBoardByTitle" resultMap="boardData">
+		SELECT B.BD_NO,B.USER_ID,U.NICKNAME,B.BD_TITLE,B.BD_CONTENT,B.V_NO,B.TAG, F.F_IDX,F.F_ORIGIN, F.F_RENAME,F.F_DATE, F.IS_DEL,F.F_SAVE_PATH 
+		FROM TB_FILE F JOIN TB_BOARD B
+		ON(F.USER_ID = B.USER_ID)
+		JOIN TB_BOARD_MASTER BM
+		ON(F.F_IDX = BM.F_IDX AND B.BD_NO = BM.BD_NO)
+		JOIN TB_USER U
+		ON(F.USER_ID = U.USER_ID)
+		WHERE F.F_IDX IN 
+		(
+		SELECT F_IDX FROM TB_BOARD_MASTER WHERE BD_NO IN
+		(SELECT BD_NO FROM TB_BOARD WHERE BD_TITLE LIKE '%'||#{bdTitle}||'%')
+		)
+	</select>
+	
+	<select id="selectBoardByContent" resultMap="boardData">
+		SELECT B.BD_NO,B.USER_ID,U.NICKNAME,B.BD_TITLE,B.BD_CONTENT,B.V_NO,B.TAG, F.F_IDX,F.F_ORIGIN, F.F_RENAME,F.F_DATE, F.IS_DEL,F.F_SAVE_PATH 
+		FROM TB_FILE F JOIN TB_BOARD B
+		ON(F.USER_ID = B.USER_ID)
+		JOIN TB_BOARD_MASTER BM
+		ON(F.F_IDX = BM.F_IDX AND B.BD_NO = BM.BD_NO)
+		JOIN TB_USER U
+		ON(F.USER_ID = U.USER_ID)
+		WHERE F.F_IDX IN 
+		(
+		SELECT F_IDX FROM TB_BOARD_MASTER WHERE BD_NO IN
+		(SELECT BD_NO FROM TB_BOARD WHERE BD_CONTENT LIKE '%'||#{bdContent}||'%')
+		)
+	</select>
+	
+	<select id="selectBoardByName" resultMap="boardData">
+		SELECT B.BD_NO,B.USER_ID,U.NICKNAME,B.BD_TITLE,B.BD_CONTENT,B.V_NO,B.TAG, F.F_IDX,F.F_ORIGIN, F.F_RENAME,F.F_DATE, F.IS_DEL,F.F_SAVE_PATH 
+		FROM TB_FILE F JOIN TB_BOARD B
+		ON(F.USER_ID = B.USER_ID)
+		JOIN TB_BOARD_MASTER BM
+		ON(F.F_IDX = BM.F_IDX AND B.BD_NO = BM.BD_NO)
+		JOIN TB_USER U
+		ON(F.USER_ID = U.USER_ID)
+		WHERE F.F_IDX IN 
+		(
+		SELECT F_IDX FROM TB_BOARD_MASTER WHERE BD_NO IN
+		(SELECT BD_NO FROM TB_BOARD WHERE NAME = #{name})
+		)
+	</select>
+	
+	<select id="selectUserProfile" resultMap="boardData">
+		SELECT F_SAVE_PATH,F_RENAME FROM TB_USER JOIN TB_FILE USING(F_IDX) WHERE NICKNAME=#{nickName}
+	</select>
+	
+		<resultMap type="map" id="boardData">
+			<result column="BD_NO" javaType="String" property="bdNo"/>
+			<result column="USER_ID" javaType="String" property="userId"/>
+			<result column="NICKNAME" javaType="String" property="nickName"/>
+			<result column="BD_TITLE" javaType="String" property="bdTitle"/>
+			<result column="BD_CONTENT" javaType="String" property="bdContent"/>
+			<result column="V_NO" javaType="String" property="vNo"/>
+			<result column="TAG" javaType="String" property="tag"/>
+			<result column="F_IDX" javaType="String" property="fIdx"/>
+			<result column="F_ORIGIN" javaType="String" property="fOrigin"/>
+			<result column="F_RENAME" javaType="String" property="fRename"/>
+			<result column="F_DATE" javaType="String" property="fDate"/>
+			<result column="IS_DEL" javaType="String" property="isDel"/>
+			<result column="F_SAVE_PATH" javaType="String" property="fSavePath"/>
+	</resultMap>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.we.art.chat.model.repository.ChatRepository">
+
+	<select id="selectChatContentList" resultMap="chatContentData">
+		SELECT CHAT_NO,CHAT_ROOM_NO,MSG,TO_DATE(MSG_TIME,'YYYY-MM-DD HH24:MI:SS') MSGTIME ,MSG_TO,MSG_FROM
+			FROM TB_CHAT_CONTENT
+			WHERE CHAT_ROOM_NO = (SELECT CHAT_ROOM_NO
+			FROM TB_CHAT_ROOM
+			WHERE ((FIRST_USER = #{firstUser} AND SECOND_USER = #{secondUser})
+			OR (FIRST_USER = #{secondUser} AND SECOND_USER = #{firstUser})))
+			ORDER BY MSGTIME ASC
+	</select>
+
+
+	<select id="selectLastMessageList" parameterType="map" resultMap="chatContentData">
+ SELECT t1.CHAT_ROOM_NO, t2.CHAT_NO, t1.MSG, t2.MSG_TO,t1.MSG_FROM,t1.IS_CHECK, 
+	TO_CHAR(t1.MSG_TIME_DATE,'YYYY-MM-DD HH24:MI:SS') as MSGTIME,
+	t2.NICKNAME as MSG_TO_NICKNAME,t1.NICKNAME as MSG_FROM_NICKNAME
+	FROM
+	(
+ 	SELECT * FROM(SELECT CHAT_ROOM_NO, CHAT_NO,MSG,MSG_FROM,MSG_TIME,NICKNAME,TO_DATE(MSG_TIME,'YYYY-MM-DD HH24:MI:SS') as MSG_TIME_DATE,IS_CHECK,
+        ROW_NUMBER() OVER(PARTITION BY CHAT_ROOM_NO ORDER BY CHAT_NO DESC) as RowIdx
+        FROM TB_CHAT_CONTENT JOIN TB_USER 
+        ON(MSG_FROM = USER_ID) WHERE
+        CHAT_ROOM_NO IN
+        <foreach collection="myChatRoomList" item="list" open="(" close=")" separator=",">
+    	 #{list.chatRoomNo}
+    	 </foreach>
+        ) t0 WHERE t0.RowIdx =1
+    	 ) t1
+ 	JOIN
+	(
+ 	SELECT * FROM (SELECT CHAT_ROOM_NO, CHAT_NO,MSG_TO,MSG_TIME,NICKNAME,IS_CHECK,
+      ROW_NUMBER() OVER(PARTITION BY CHAT_ROOM_NO ORDER BY CHAT_NO DESC) as RowIdx2
+        FROM TB_CHAT_CONTENT JOIN TB_USER 
+        ON(MSG_TO= USER_ID) WHERE
+        CHAT_ROOM_NO IN
+         <foreach collection="myChatRoomList" item="list" open="(" close=")" separator=",">
+    	 #{list.chatRoomNo}
+    	 </foreach>
+        ) t3 WHERE t3.RowIdx2 =1
+	) t2 ON(t1.CHAT_ROOM_NO = t2.CHAT_ROOM_NO) WHERE t1.MSG_TIME = t2.MSG_TIME
+	ORDER BY MSGTIME DESC
+	</select>
+	
+	<select id="selectSenderList" resultMap="followingData">
+		SELECT DISTINCT NICKNAME, USER_ID
+		FROM
+		(
+		SELECT * FROM TB_CHAT_CONTENT
+		WHERE (MSG_FROM=#{userId} OR MSG_TO=#{userId})
+		) C JOIN TB_USER
+		ON(MSG_TO=USER_ID OR MSG_FROM =USER_ID) WHERE USER_ID !=#{userId}
+	</select>
+	
+	<update id="updateChatContent">
+		UPDATE TB_CHAT_CONTENT SET IS_CHECK = 1
+		WHERE MSG_TO = #{msgTo} AND MSG_FROM = #{msgFrom} AND IS_CHECK = 0
+	</update>
+	
+	<select id="selectNotiCheckChatContent" resultType="chatContent">
+		SELECT *FROM TB_CHAT_CONTENT
+		WHERE MSG_TO = #{msgTo} AND IS_CHECK = 0
+	</select>
+	
+	
+	<resultMap type="map" id="chatContentData">
+		<result column="CHAT_NO" javaType="String" property="chatNo"/>
+		<result column="CHAT_ROOM_NO" javaType="string" property="chatRoomNo"/>
+		<result column="MSG" javaType="String" property="msg"/>
+		<result column="MSGTIME" javaType="String" property="msgTime"/>
+		<result column="MSG_TO" javaType="String" property="msgTo"/>
+		<result column="MSG_FROM" javaType="String" property="msgFrom"/>
+		<result column="MSG_FROM_NICKNAME" javaType="String" property="msgFromNickName"/>
+		<result column="MSG_TO_NICKNAME" javaType="String" property="msgToNickName"/>
+		<result column="IS_CHECK" javaType="Integer" property="isCheck"/>
+	</resultMap>
+	
+	
+	<resultMap type="map" id="followingData">
+		<result column="TO_ID" javaType="String" property="toId"/>
+		<result column="NICKNAME" javaType="String" property="nickName"/>
+		<result column="USER_ID" javaType="String" property="userId"/>
+	</resultMap>
+</mapper>

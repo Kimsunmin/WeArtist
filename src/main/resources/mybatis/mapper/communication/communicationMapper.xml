@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.we.art.communication.model.repository.CommunicationRepository">
+
+<select id="selectHistoryById" resultMap="NotiData">
+	SELECT TO_ID, FROM_ID,NOTI_METHOD, TO_DATE(NOTI_TIME,'YYYY-MM-DD HH24:MI:SS') as NOTITIME, BD_NO,BD_TITLE, IS_CHECK, NICKNAME FROM 
+	(SELECT *FROM TB_HISTORY WHERE TO_ID=#{userId} AND IS_CHECK = 0) T1 
+	JOIN TB_USER
+	ON(T1.FROM_ID = USER_ID)
+	ORDER BY NOTI_TIME DESC
+</select>
+
+<select id="certificateHistory" resultMap="NotiData">
+	SELECT *FROM TB_HISTORY
+	WHERE TO_ID =#{toId} AND FROM_ID =#{fromId}
+	AND IS_CHECK= 0 AND NOTI_METHOD=#{notiMethod}
+	<if test='bdNo ==null'>
+		AND BD_NO IS NULL
+	</if>
+	<if test='bdNo !=null'>	
+		AND BD_NO =#{bdNo}
+	</if>
+</select>
+
+
+<insert id="insertHistory">
+	INSERT INTO TB_HISTORY(TO_ID,FROM_ID,NOTI_METHOD,NOTI_TIME,BD_NO,BD_TITLE) VALUES(#{toId},#{fromId},#{notiMethod},#{notiTime},#{bdNo},#{bdTitle})
+</insert>
+
+<update id="updateHistory">
+	UPDATE TB_HISTORY SET IS_CHECK = 1 WHERE TO_ID=#{toId} AND FROM_ID =#{fromId} AND NOTI_METHOD = #{notiMethod} 
+	<if test='bdNo ==null'>
+		AND BD_NO IS NULL 
+	</if>
+	<if test='bdNo !=null'>
+		AND BD_NO = #{bdNo}
+	</if>
+</update>
+
+	<resultMap type="map" id="NotiData">
+		<result column="TO_ID" javaType="String" property="toId"/>
+		<result column="FROM_ID" javaType="string" property="fromId"/>
+		<result column="IS_CHECK" javaType="INTEGER" property="isCheck"/>
+		<result column="NICKNAME" javaType="String" property="nickName"/>
+		<result column="NOTI_METHOD" javaType="String" property="notiMethod"/>
+		<result column="BD_NO" javaType="String" property="bdNo"/>
+		<result column="BD_TITLE" javaType="String" property="bdTitle"/>
+		<result column="NOTITIME" javaType="String" property="notiTime"/>
+	</resultMap>
+</mapper>

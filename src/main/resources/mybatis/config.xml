@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  
+<!-- 마이바티스 관련 설정 파일 -->
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<setting name="jdbcTypeForNull" value="NULL" /> 
+	</settings>
+	<typeAliases>
+	<!--typeAlias 들어올 곳  -->
+		<typeAlias type="com.we.art.chat.model.vo.ChatContent"	alias="chatContent" />
+		<typeAlias type="com.we.art.chat.model.vo.ChatRoom"	alias="chatRoom" />
+		<typeAlias type="com.we.art.board.model.vo.Board" alias="board"/>
+		<typeAlias type="com.we.art.gallery.model.vo.Gallery" alias="gallery"/>
+		<typeAlias type="com.we.art.common.util.file.FileVo" alias="fileVo"/>
+		<typeAlias type="com.we.art.user.model.vo.User" alias="user"/>
+		<typeAlias type="com.we.art.common.util.file.FileVo" alias="fileVo"/>
+		
+	</typeAliases>
+	
+	
+	<mappers>
+	<!-- mapper 들어올 곳 -->
+		<mapper resource="mybatis/mapper/chat/chatMapper.xml"/>
+		<mapper resource="mybatis/mapper/board/boardMapper.xml"/>
+		<mapper resource="mybatis/mapper/user/userMapper.xml"/>
+		<mapper resource="mybatis/mapper/gallery/galleryMapper.xml"/>
+		<mapper resource="mybatis/mapper/communication/communicationMapper.xml"></mapper>
+		<mapper resource="mybatis/mapper/search/searchMapper.xml"></mapper>
+		<mapper resource="mybatis/mapper/personal/personalMapper.xml"></mapper>
+	</mappers>
+
+	
+</configuration>

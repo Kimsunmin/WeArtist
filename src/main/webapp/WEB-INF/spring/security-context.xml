@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<beans:beans
+    xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd">
+ 
+    <http auto-config='true' use-expressions="true">
+ 
+ 		<!-- 설정된 경로에 권한을 검사하는 태크 -->
+        <!--<intercept-url pattern="/" requires-channel="https" access="permitAll" />  -->
+ 
+        <!-- csrf 처리할껀지 체크 -->
+        <csrf disabled="true"/>
+    </http>
+    <authentication-manager>
+        <!-- <authentication-provider>
+            <user-service>
+                <user name="master" password="kim1234" authorities="ROLE_USER" />
+            </user-service>
+        </authentication-provider> -->
+    </authentication-manager>
+</beans:beans>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.we.art.personal.model.repository.PersonalRepository">
+	<select id="selectUserByNickName" resultMap="userData">
+	SELECT U.USER_ID,PASSWORD, EMAIL,NAME,PHONE,NICKNAME,LOGIN_METHOD,U.F_IDX,F_SAVE_PATH,F_RENAME
+	FROM TB_USER U LEFT OUTER JOIN TB_FILE F
+	ON(U.F_IDX = F.F_IDX)
+	WHERE NICKNAME = #{nickName}
+	</select>
+	
+	<resultMap type="map" id="userData">
+		<result column="USER_ID" javaType="String" property="userId"/>
+		<result column="PASSWORD" javaType="String" property="password"/>
+		<result column="NAME" javaType="String" property="name"/>
+		<result column="NICKNAME" javaType="String" property="nickName"/>
+		<result column="EMAIL" javaType="String" property="email"/>
+		<result column="PHONE" javaType="String" property="phone"/>
+		<result column="LOGIN_METHOD" javaType="String" property="loginMethod"/>
+		<result column="F_IDX" javaType="String" property="fIdx"/>
+		<result column="F_RENAME" javaType="String" property="fRename"/>
+		<result column="F_SAVE_PATH" javaType="String" property="fSavePath"/>
+	</resultMap>
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+	http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+				
+	<!-- JDBC 설정 bean  -->
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+	<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+	<property name="url" value="jdbc:oracle:thin:@weartist_medium?TNS_ADMIN=/var/lib/tomcat8/webapps/gitTest/WEB-INF/classes/Wallet_WeArtist"/>
+	<!-- <property name="url" value="jdbc:oracle:thin:@weartist_medium?TNS_ADMIN=C:\\code\\wallet\\Wallet_WeArtist"/> -->
+	<property name="username" value="admin"/>
+	<property name="password" value="Weartist0000"/>
+	</bean>		
+	
+	<!--  SqlSession을 생성하는 구성 요소 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+  		<property name="dataSource" ref="dataSource"/>
+  		<property name="configLocation" value="classpath:mybatis/config.xml"></property>
+	</bean>
+	
+	<!-- @Mapper 어노테이션이 등록된 인터페이스 매퍼를 찾아 스프링에 등록 -->
+	<mybatis:scan base-package="com.we.art" annotation ="org.apache.ibatis.annotations.Mapper"/>
+		
+		<!-- MainSender bean 등록 -->
+		<bean id="mailSenderImpl" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+			<property name="host" value="smtp.naver.com"/>
+			<property name="username" value="weartist1@naver.com"/>
+			<property name="password" value="Weartist00!"/>
+			<property name="port" value="465"/>
+			<property name="javaMailProperties">
+				<props>
+					<prop key="mail.smtp.auth">true</prop>
+					<prop key="mail.smtp.starttls.enable">true</prop>
+					<prop key="mail.smtp.ssl.enable">true</prop>
+					<prop key="mail.debug">true</prop>
+				</props>
+			</property>
+		</bean>
+		
+		<!-- Spring MVC에서 파일 업로드를 위해 필요한 Bean -->
+		<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+			<property name="maxInMemorySize" value="10487560"/>
+			<property name="maxUploadSize" value="10487560"/>
+		</bean>
+</beans>
