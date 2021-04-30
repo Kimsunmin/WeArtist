@@ -46,8 +46,24 @@ let target;
 
 ## 어려려웠던 점
 ***
-이미 만들어져 있던 GLTF파일에서 필요한 3D객체를 찾아 이미지를 교체하는 과정
++ 이미 만들어져 있던 GLTF파일에서 필요한 3D객체를 찾아 이미지를 교체하는 과정
+  + 해결방법 : scene객체의 getObjectByName()을 통해 필요한 객체를 찾아 해당 오브젝트의 material.map 속성을 업로드한 이미지로 변경
+  
++ 이미지를 클릭했을때 이벤트 발생
+  + 해결방법 : 클릭시 해당위치의 x,y값을 입력받아 미리 저장한 targetList와 클릭된 객체를 비교하였다.
+```javascript
+let ray = new THREE.Raycaster();
+ray.setFromCamera( mouse, camera );
+let intersects = ray.intersectObjects( targetList);
+if(intersects.length > 0){
+  targetList.forEach((e) => {
+    // 클릭했을때 눌린 객체가 그림인지 아닌지 확인하는 조건문
+    if(e.name === intersects[0].object.name && galleryData[e.name]){
+      clickObject(e.name);
+    }
+  })}
+```
 
-
+## Screenshot
 ![WeArtist_Gallery](https://user-images.githubusercontent.com/19908489/116664644-b7191500-a9d3-11eb-8a2c-ed1e0a180e0d.jpg)
 
