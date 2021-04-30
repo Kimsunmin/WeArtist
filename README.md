@@ -22,6 +22,7 @@
 
 ## 구현기능
 ***
+>전시관 불러오기
 ```JavaScript
 let target;
   const gltfLoader = new GLTFLoader();
@@ -42,5 +43,11 @@ let target;
     
 });
 ```
+
+## 어려려웠던 점
+***
+이미 만들어져 있던 GLTF파일에서 필요한 3D객체를 찾아 이미지를 교체하는 과정
+
+
 ![WeArtist_Gallery](https://user-images.githubusercontent.com/19908489/116664644-b7191500-a9d3-11eb-8a2c-ed1e0a180e0d.jpg)
 
