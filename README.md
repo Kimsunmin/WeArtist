@@ -22,7 +22,7 @@
 
 ## 구현기능
 ***
-```java
+```JavaScript
 let target;
   const gltfLoader = new GLTFLoader();
   const url = '/resources/landscape_gallery_by_stoneysteiner/scene.gltf';
